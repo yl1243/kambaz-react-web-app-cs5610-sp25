@@ -1,34 +1,26 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
+import Labs from './Labs';
+import Kambaz from "./Kambaz";
+import { HashRouter, Route, Routes, Navigate } from 'react-router-dom'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
+    // BrowserRouter 这里Netlify 识别不了BrowseRouter, 所以得用更广泛的HashRouter, 被更多的hosting services 认可
+    <HashRouter>
+      {/* import Labs folder, so all index file in Labs can be displayed */}
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        {/* <Routes> 包裹多个 <Route>，会根据当前的 URL 自动匹配并渲染正确的组件 */}
+        <Routes>
+          {/* path="/Labs/*" 是路由路径的规则 */}
+          {/* 当 URL 匹配 /Labs/* 时，React Router 会渲染 Labs 组件,浏览器会显示 Labs 组件返回的内容 */}
+          <Route path= "/" element={<Navigate to="Kambaz" />} />
+          <Route path="/Labs/*" element={<Labs />} />
+          <Route path= "/Kambaz/*" element={<Kambaz />} />
+        </Routes>
+        {/* <Labs /> 这里之前放的Labs要被删除， 因为上面已经有一个Route来tie Labs URL */}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more, edited for Assignment1 demooo000
-      </p>
-    </>
+    </HashRouter>
   )
 }
 
