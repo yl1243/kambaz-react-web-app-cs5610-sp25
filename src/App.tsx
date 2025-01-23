@@ -3,6 +3,7 @@ import Labs from './Labs';
 import Kambaz from "./Kambaz";
 import { HashRouter, Route, Routes, Navigate } from 'react-router-dom'
 import './App.css'
+import Landing from './Landing';
 
 function App() {
   return (
@@ -14,9 +15,10 @@ function App() {
         <Routes>
           {/* path="/Labs/*" 是路由路径的规则 */}
           {/* 当 URL 匹配 /Labs/* 时，React Router 会渲染 Labs 组件,浏览器会显示 Labs 组件返回的内容 */}
-          <Route path= "/" element={<Navigate to="Kambaz" />} />
+          <Route path="/" element={<Navigate to="Kambaz" />} />
           <Route path="/Labs/*" element={<Labs />} />
-          <Route path= "/Kambaz/*" element={<Kambaz />} />
+          <Route path="/Kambaz/*" element={<Kambaz />} />
+          <Route path="/Landing" element={<Landing />} />
         </Routes>
         {/* <Labs /> 这里之前放的Labs要被删除， 因为上面已经有一个Route来tie Labs URL */}
       </div>
