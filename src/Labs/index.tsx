@@ -10,6 +10,25 @@ export default function Labs() {
         <div>
 
             <h1>Labs</h1>
+
+            {/* Full name and section number */}
+            <div style={{ marginBottom: '20px' }}>
+                <h2>Yujie Li</h2>
+            </div>
+
+            {/* Heading for GitHub link */}
+            <h1>Repositories Link</h1>
+            <div style={{ marginTop: '20px' }}>
+                <a
+                    id="wd-github" // add id attributes
+                    href="https://github.com/yl1243/kambaz-react-web-app-cs5610-sp25/tree/a1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    All Source Code Repositories on GitHub
+                </a>
+            </div>
+
             {/* 将Labs中的TOC.tsx文件传入过来 */}
             <TOC />
             <Routes>
