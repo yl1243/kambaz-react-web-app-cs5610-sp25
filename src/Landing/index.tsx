@@ -12,7 +12,7 @@ export default function Landing() {
             </div>
 
             {/* Heading for GitHub link */}
-            <h1>Repositories Link</h1>
+            <h2>Repositories Link</h2>
             <div style={{ marginTop: "20px" }}>
                 <a
                     href="https://github.com/yl1243/kambaz-react-web-app-cs5610-sp25/tree/a1"
@@ -23,7 +23,7 @@ export default function Landing() {
                 </a>
             </div>
 
-            <h1>Labs</h1>
+            <h2>Labs</h2>
             <ul>
                 <li><Link to="Lab1">Labs</Link></li>
                 <li><Link to="Lab1">Lab 1</Link></li>
@@ -31,7 +31,7 @@ export default function Landing() {
                 <li><Link to="Lab3">Lab 3</Link></li>
             </ul>
 
-            <h1>Kambaz</h1>
+            <h2>Kambaz</h2>
 
             <ul>
                 <li><Link to="/Kambaz/Account/Signin">Kambaz</Link></li>
