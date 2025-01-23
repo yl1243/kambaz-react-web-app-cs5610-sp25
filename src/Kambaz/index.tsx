@@ -10,6 +10,7 @@ export default function Kambaz() {
     return (
         // Add Account Screen to Kambaz Landing Page
         <div id="wd-kambaz">
+            <h1>Kambaz</h1>
             <table>
                 <tr>
                     <td valign=
