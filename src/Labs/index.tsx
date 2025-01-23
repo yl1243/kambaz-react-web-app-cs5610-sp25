@@ -17,7 +17,7 @@ export default function Labs() {
             </div>
 
             {/* Heading for GitHub link */}
-            <h1>Repositories Link</h1>
+            <h2>Repositories Link</h2>
             <div style={{ marginTop: '20px' }}>
                 <a
                     id="wd-github" // add id attributes
