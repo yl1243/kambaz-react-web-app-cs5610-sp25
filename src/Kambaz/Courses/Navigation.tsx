@@ -1,34 +1,5 @@
-// import { NavLink, useParams, useLocation } from "react-router-dom";
 
-// export default function CoursesNavigation() {
-//     const { courseId } = useParams(); // 获取当前课程 ID
-//     const { pathname } = useLocation(); // 获取当前路径
-
-//     const links = ["Home", "Modules", "Piazza", "Zoom", "Assignments", "Quizzes", "Grades", "People"];
-
-//     return (
-//         <div id="wd-courses-navigation" className="list-group fs-5 rounded-0">
-//             {links.map((link) => {
-//                 const path = `/Kambaz/Courses/${courseId}/${link}`;
-//                 const isActive = pathname.includes(link);
-
-
-//                 return (
-//                     <NavLink
-//                         key={link}
-//                         id={`wd-course-${link.toLowerCase()}-link`}
-//                         className={`list-group-item border-0 ${isActive ? "active bg-white text-danger" : ""}`}
-//                         to={path}
-//                     >
-//                         {link}
-//                     </NavLink>
-//                 );
-//             })}
-//         </div>
-//     );
-// }
-
-import { NavLink, Link, useParams, useLocation } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 
 
 export default function CoursesNavigation() {
