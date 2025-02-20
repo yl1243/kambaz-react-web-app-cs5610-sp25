@@ -3,6 +3,17 @@ import * as db from "./Database";
 import { Button, Card, Col, Row } from "react-bootstrap";
 export default function Dashboard() {
     const courses = db.courses;
+    const courseImages: {
+        [key: string]: string;
+    } = {
+        "RS101": "/images/reactjs.jpg",
+        "RS102": "/images/terraform.jpg",
+        "RS103": "/images/nodejs.jpg",
+        "RS104": "/images/python.jpg",
+        "RS105": "/images/docker.jpg",
+        "RS106": "/images/kubernetes.jpg",
+        "RS107": "/images/git.jpg",
+    }
     return (
         <div id="wd-dashboard">
             <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
@@ -14,7 +25,13 @@ export default function Dashboard() {
                             <Card>
                                 <Link to={`/Kambaz/Courses/${course._id}/Home`}
                                     className="wd-dashboard-course-link text-decoration-none text-dark" >
-                                    <Card.Img src="/images/reactjs.jpg" variant="top" width="100%" height={160} />
+                                    {/* <Card.Img src="/images/reactjs.jpg" variant="top" width="100%" height={160} /> */}
+                                    <Card.Img
+                                        src={courseImages[course._id] || "/images/teslabot.jpg"}
+                                        variant="top"
+                                        width="100%"
+                                        height={160}
+                                    />
                                     <Card.Body className="card-body">
                                         <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden">
                                             {course.name} </Card.Title>
