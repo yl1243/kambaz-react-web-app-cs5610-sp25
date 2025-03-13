@@ -1,4 +1,4 @@
-import { Form, Button, FormControl } from "react-bootstrap";
+import { Button, FormControl } from "react-bootstrap";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { setCurrentUser } from "./reducer";
@@ -24,7 +24,7 @@ export default function Signin() {
         console.log("User found:", user); // Debugging
 
         // 添加 role 字段
-        const userWithRole = { ...user, role: "FACULTY" }; // 或者根据实际情况设置 role
+        // const userWithRole = { ...user, role: "FACULTY" }; // 或者根据实际情况设置 role
         dispatch(setCurrentUser(user));
         navigate("Kambaz/Dashboard");
     };
