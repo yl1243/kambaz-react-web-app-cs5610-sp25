@@ -3,9 +3,9 @@ import ModulesControls from "./ModulesControls";
 import LessonControlButtons from "./LessonControlButtons";
 import ModuleControlButtons from "./ModuleControlButtons";
 import { useParams } from "react-router";
-import * as db from "../../Database";
-import React, { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+// import * as db from "../../Database";
+import { useState } from "react";
+// import { v4 as uuidv4 } from "uuid";
 import { FormControl, ListGroup } from "react-bootstrap";
 
 // add delete update modules

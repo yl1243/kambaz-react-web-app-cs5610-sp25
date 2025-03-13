@@ -28,7 +28,7 @@ export default function AccountNavigation() {
                     throw new Error("Function not implemented.");
                 }} addNewCourse={function (): void {
                     throw new Error("Function not implemented.");
-                }} deleteCourse={function (courseId: string): void {
+                }} deleteCourse={function (): void {
                     throw new Error("Function not implemented.");
                 }} updateCourse={function (): void {
                     throw new Error("Function not implemented.");
