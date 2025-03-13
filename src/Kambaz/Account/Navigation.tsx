@@ -24,7 +24,7 @@ export default function AccountNavigation() {
                 <Route path="/Profile" element={<Profile />} />
 
                 {/* Protect Dashboard and other routes with ProtectedRoute */}
-                <Route path="/Dashboard" element={<ProtectedRoute><Dashboard courses={[]} course={undefined} setCourse={function (course: any): void {
+                <Route path="/Dashboard" element={<ProtectedRoute><Dashboard courses={[]} course={undefined} setCourse={function (): void {
                     throw new Error("Function not implemented.");
                 }} addNewCourse={function (): void {
                     throw new Error("Function not implemented.");
