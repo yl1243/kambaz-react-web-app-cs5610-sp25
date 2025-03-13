@@ -1,16 +1,46 @@
-// import { BsGripVertical } from "react-icons/bs";
 import { IoBookOutline } from "react-icons/io5";
 import { FaSearch, FaPlus } from "react-icons/fa";
 import { IoEllipsisVertical } from "react-icons/io5";
-import { Button, Form, InputGroup, Row, Col, Card } from "react-bootstrap";
-import { Link, useParams } from "react-router-dom";
+import { Button, InputGroup, FormControl, Row, Col, Card, Modal, Form } from "react-bootstrap";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import * as db from "../../Database";
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import AssignmentDragHandle from "./AssignmentDragHandle";
+import { useSelector, useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { addAssignment, deleteAssignment, updateAssignment, editAssignment } from "./reducer";
 
 export default function Assignments() {
     const { cid } = useParams(); // 获取当前课程 ID
-    const assignments = db.assignments; // 获取所有作业
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer); // 从 Redux 获取作业数据
+    const { currentUser } = useSelector((state: any) => state.accountReducer); // 获取当前用户
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [assignmentToDelete, setAssignmentToDelete] = useState<any>(null);
+    const [searchQuery, setSearchQuery] = useState('');
+
+    // 删除作业的处理函数
+    const handleDeleteClick = (assignment: any) => {
+        setAssignmentToDelete(assignment);
+        setShowDeleteModal(true);
+    };
+
+    const handleConfirmDelete = () => {
+        dispatch(deleteAssignment(assignmentToDelete._id)); // 使用 dispatch 删除作业
+        setShowDeleteModal(false);
+    };
+
+    const handleCancelDelete = () => {
+        setShowDeleteModal(false);
+    };
+
+    // 编辑作业的处理函数
+    const handleEditClick = (assignmentId: string) => {
+        dispatch(editAssignment(assignmentId)); // 设置作业为编辑状态
+        navigate(`/Kambaz/Courses/${cid}/Assignments/${assignmentId}`); // 跳转到编辑页面
+    };
 
     return (
         <div className="container">
@@ -24,18 +54,26 @@ export default function Assignments() {
                     <InputGroup.Text>
                         <FaSearch />
                     </InputGroup.Text>
-                    <Form.Control type="text" placeholder="Search for Assignments" />
+                    <Form.Control
+                        type="text"
+                        placeholder="Search for Assignments"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
                 </InputGroup>
 
                 {/* 按钮组 */}
-                <div>
-                    <Button variant="secondary" className="me-2">
-                        <FaPlus className="me-1" /> Group
-                    </Button>
-                    <Button variant="danger">
-                        <FaPlus className="me-1" /> Assignment
-                    </Button>
-                </div>
+                {currentUser && currentUser.role === "FACULTY" && (
+                    <div>
+                        <Button
+                            variant="secondary"
+                            className="me-2"
+                            onClick={() => navigate(`/Kambaz/Courses/${cid}/Assignments/new`)}
+                        >
+                            <FaPlus className="me-1" /> New Assignment
+                        </Button>
+                    </div>
+                )}
             </div>
 
             {/* 作业列表 */}
@@ -57,19 +95,19 @@ export default function Assignments() {
 
                 <ul id="wd-assignment-list" className="list-unstyled">
                     {assignments
-                        .filter((assignment: any) => assignment.course === cid) // 过滤当前课程作业
+                        .filter((assignment: any) =>
+                            assignment.course === cid &&
+                            assignment.title.toLowerCase().includes(searchQuery.toLowerCase())
+                        ) // 搜索作业
                         .map((assignment: any) => (
                             <li key={assignment._id} className="border-start border-success border-4 p-2 mb-2">
                                 <Row className="align-items-center">
-                                    {/* 拖拽图标 */}
                                     <Col xs="auto">
                                         <AssignmentDragHandle />
                                     </Col>
-                                    {/* 书本图标 */}
                                     <Col xs="auto">
                                         <IoBookOutline className="text-success fs-4" />
                                     </Col>
-                                    {/* 作业详情 */}
                                     <Col>
                                         <Link
                                             className="fw-bold text-dark text-decoration-none"
@@ -80,28 +118,170 @@ export default function Assignments() {
                                         <p className="text-muted mb-0">
                                             <strong className="text-primary">Multiple Modules</strong> |
                                             <strong> Not available until</strong> {new Date(assignment.availableDate).toLocaleString()} |
-                                            <strong> Due</strong> {new Date(assignment.dueDate).toLocaleString()} |
+                                            <strong> Available from </strong>{new Date(assignment.availableFrom).toLocaleString()} |
+                                            <strong> Until</strong> {new Date(assignment.dueDate).toLocaleString()} |
                                             {assignment.point} pts
                                         </p>
                                         {/* 显示作业描述 */}
                                         {assignment.description && (
-                                            <div className="p-2 bg-light text-muted rounded">
+                                            <div className="p-f2 bg-light text-muted rounded">
                                                 {assignment.description}
                                             </div>
                                         )}
                                     </Col>
-                                    {/* 操作按钮 */}
                                     <Col xs="auto">
-                                        <AssignmentControlButtons />
+                                        {currentUser && currentUser.role === "FACULTY" && (
+                                            <>
+                                                <Button
+                                                    variant="warning"
+                                                    onClick={() => handleEditClick(assignment._id)}
+                                                >
+                                                    Edit
+                                                </Button>
+                                                <Button
+                                                    variant="danger"
+                                                    onClick={() => handleDeleteClick(assignment)}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </>
+                                        )}
                                     </Col>
                                 </Row>
                             </li>
                         ))}
                 </ul>
             </Card>
+
+            {/* 删除确认模态框 */}
+            <Modal show={showDeleteModal} onHide={handleCancelDelete}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Delete</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Are you sure you want to delete this assignment?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCancelDelete}>
+                        Cancel
+                    </Button>
+                    <Button variant="danger" onClick={handleConfirmDelete}>
+                        Yes, Delete
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }
+
+
+
+
+// // import { BsGripVertical } from "react-icons/bs";
+// import { IoBookOutline } from "react-icons/io5";
+// import { FaSearch, FaPlus } from "react-icons/fa";
+// import { IoEllipsisVertical } from "react-icons/io5";
+// import { Button, FormControl, Form, InputGroup, Row, Col, Card } from "react-bootstrap";
+// import { Link, useParams } from "react-router-dom";
+// import * as db from "../../Database";
+// import AssignmentControlButtons from "./AssignmentControlButtons";
+// import AssignmentDragHandle from "./AssignmentDragHandle";
+
+
+// export default function Assignments() {
+//     const { cid } = useParams(); // 获取当前课程 ID
+//     const assignments = db.assignments; // 获取所有作业
+
+//     return (
+//         <div className="container">
+//             <h2 className="text-danger">Assignments</h2>
+//             <hr />
+
+//             {/* 搜索框和新增按钮 */}
+//             <div className="d-flex justify-content-between align-items-center mb-3">
+//                 {/* 搜索栏 */}
+//                 <InputGroup style={{ maxWidth: "300px" }}>
+//                     <InputGroup.Text>
+//                         <FaSearch />
+//                     </InputGroup.Text>
+//                     <Form.Control type="text" placeholder="Search for Assignments" />
+//                 </InputGroup>
+
+//                 {/* 按钮组 */}
+//                 <div>
+//                     <Button variant="secondary" className="me-2">
+//                         <FaPlus className="me-1" /> Group
+//                     </Button>
+//                     <Button variant="danger">
+//                         <FaPlus className="me-1" /> Assignment
+//                     </Button>
+//                 </div>
+//             </div>
+
+//             {/* 作业列表 */}
+//             <Card className="p-3">
+//                 <Row className="align-items-center">
+//                     <Col xs="auto">
+//                         <AssignmentDragHandle /> {/* 8 dots drag handle */}
+//                     </Col>
+//                     <Col className="d-flex align-items-center">
+//                         <span className="fw-bold fs-5">▾ ASSIGNMENTS</span>
+//                     </Col>
+//                     <Col className="text-end text-muted">40% of Total</Col>
+//                     <Col xs="auto">
+//                         <Button variant="light" className="fs-5">+</Button>
+//                         <IoEllipsisVertical className="fs-4 text-muted" />
+//                     </Col>
+//                 </Row>
+//                 <hr />
+
+//                 <ul id="wd-assignment-list" className="list-unstyled">
+//                     {assignments
+//                         .filter((assignment: any) => assignment.course === cid) // 过滤当前课程作业
+//                         .map((assignment: any) => (
+//                             <li key={assignment._id} className="border-start border-success border-4 p-2 mb-2">
+//                                 <Row className="align-items-center">
+//                                     {/* 拖拽图标 */}
+//                                     <Col xs="auto">
+//                                         <AssignmentDragHandle />
+//                                     </Col>
+//                                     {/* 书本图标 */}
+//                                     <Col xs="auto">
+//                                         <IoBookOutline className="text-success fs-4" />
+//                                     </Col>
+//                                     {/* 作业详情 */}
+//                                     <Col>
+//                                         <Link
+//                                             className="fw-bold text-dark text-decoration-none"
+//                                             to={`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
+//                                         >
+//                                             {assignment.title}
+//                                         </Link>
+//                                         <p className="text-muted mb-0">
+//                                             <strong className="text-primary">Multiple Modules</strong> |
+//                                             <strong> Not available until</strong> {new Date(assignment.availableDate).toLocaleString()} |
+//                                             <strong> Due</strong> {new Date(assignment.dueDate).toLocaleString()} |
+//                                             {assignment.point} pts
+//                                         </p>
+//                                         {/* 显示作业描述 */}
+//                                         {assignment.description && (
+//                                             <div className="p-2 bg-light text-muted rounded">
+//                                                 {assignment.description}
+//                                             </div>
+//                                         )}
+//                                     </Col>
+//                                     {/* 操作按钮 */}
+//                                     <Col xs="auto">
+//                                         <AssignmentControlButtons />
+//                                     </Col>
+//                                 </Row>
+//                             </li>
+//                         ))}
+//                 </ul>
+//             </Card>
+//         </div>
+//     );
+// }
 
 
 // import GreenCheckPlus from "./GreenCheckPlus";

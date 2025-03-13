@@ -77,7 +77,7 @@
 //             <NavLink
 //                 to="/Kambaz/Landing"
 //                 id="wd-landing-link"
-//                 className={({ isActive }) => isActive ? "list-group-item text-center border-0 bg-white text-danger" : "list-group-item text-center border-0 bg-black text-white"}>
+//                 className={({ isActive }) => isActive ? "list-group-item text-center border-0 bg-white text-danger" : "-item text-center border-0 bg-black text-white"}>
 //                 <BsAirplane className="fs-1" /><br />
 //                 Landing Page
 //             </NavLink>

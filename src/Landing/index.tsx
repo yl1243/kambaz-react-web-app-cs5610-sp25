@@ -29,6 +29,7 @@ export default function Landing() {
                 <li><Link to="Lab1">Lab 1</Link></li>
                 <li><Link to="Lab2">Lab 2</Link></li>
                 <li><Link to="Lab3">Lab 3</Link></li>
+                <li><Link to="Lab3">Lab 4</Link></li>
             </ul>
 
             <h2>Kambaz</h2>

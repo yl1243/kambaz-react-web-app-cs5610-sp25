@@ -1,52 +1,258 @@
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import * as db from "./Database";
-import { Button, Card, Col, Row } from "react-bootstrap";
-export default function Dashboard() {
-    const courses = db.courses;
-    const courseImages: {
-        [key: string]: string;
-    } = {
+import { Button, Card, Col, FormControl, Row } from "react-bootstrap";
+import { useSelector } from "react-redux";
+
+interface DashboardProps {
+    courses: any[];
+    course: any;
+    setCourse: (course: any) => void;
+    addNewCourse: () => void;
+    deleteCourse: (courseId: string) => void;
+    updateCourse: () => void;
+}
+
+export default function Dashboard({
+    courses,
+    course,
+    setCourse,
+    addNewCourse,
+    deleteCourse,
+    updateCourse
+}: DashboardProps) {
+    const courseImages: { [key: string]: string } = {
         "RS101": "/images/reactjs.jpg",
         "RS102": "/images/terraform.jpg",
         "RS103": "/images/nodejs.jpg",
         "RS104": "/images/python.jpg",
         "RS105": "/images/docker.jpg",
-        "RS106": "/images/kubernetes.jpg",
+        "RS106": "/public/images/kubernetes.jpg",
         "RS107": "/images/git.jpg",
-    }
+    };
+    const defaultImage = "/images/teslabot.jpg"; // 默认图片路径
+
+    const { currentUser } = useSelector((state: any) => state.accountReducer); // 从 Redux 获取当前用户
+    const { enrollments } = db;
+
+    // 调试信息
+    console.log("Enrollments:", enrollments);
+    console.log("Courses:", courses);
+    const filteredCourses = courses.filter((course) =>
+        enrollments.some(
+            (enrollment) =>
+                enrollment.user === currentUser._id &&
+                enrollment.course === course._id
+        )
+    );
+    console.log("Filtered Courses:", filteredCourses);
+
+
     return (
         <div id="wd-dashboard">
             <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
             <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
+
+            {currentUser && currentUser.role === "FACULTY" && (
+                <h5>New Course
+                    <button className="btn btn-primary float-end"
+                        id="wd-add-new-course-click"
+                        onClick={addNewCourse} > Add
+                    </button>
+
+                    <button className="btn btn-warning float-end me-2"
+                        onClick={updateCourse} id="wd-update-course-click">
+                        Update
+                    </button>
+
+                </h5>
+            )}
+
+            <br />
+            <FormControl value={course.name} className="mb-2"
+                onChange={(e) => setCourse({ ...course, name: e.target.value })} />
+            <FormControl as="textarea" value={course.description} rows={3}
+                onChange={(e) => setCourse({ ...course, description: e.target.value })} />
+
+            <hr />
+
+
             <div id="wd-dashboard-courses">
                 <Row xs={1} md={5} className="g-4">
-                    {courses.map((course) => (
-                        <Col className="wd-dashboard-course" style={{ width: "300px" }}>
-                            <Card>
-                                <Link to={`/Kambaz/Courses/${course._id}/Home`}
-                                    className="wd-dashboard-course-link text-decoration-none text-dark" >
-                                    {/* <Card.Img src="/images/reactjs.jpg" variant="top" width="100%" height={160} /> */}
-                                    <Card.Img
-                                        src={courseImages[course._id] || "/images/teslabot.jpg"}
-                                        variant="top"
-                                        width="100%"
-                                        height={160}
-                                    />
-                                    <Card.Body className="card-body">
-                                        <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden">
-                                            {course.name} </Card.Title>
-                                        <Card.Text className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
-                                            {course.description} </Card.Text>
-                                        <Button variant="primary"> Go </Button>
-                                    </Card.Body>
-                                </Link>
-                            </Card>
-                        </Col>
-                    ))}
+                    {filteredCourses
+                        .map((course) => (
+                            <Col className="wd-dashboard-course col" style={{ width: "300px" }}>
+                                <Card>
+                                    <Link to={`/Kambaz/Courses/${course._id}/Home`}
+                                        className="wd-dashboard-course-link text-decoration-none text-dark" >
+                                        <Card.Img
+                                            src={courseImages[course._id] || defaultImage}
+                                            variant="top"
+                                            width="100%"
+                                            height={160}
+                                        />
+                                        <Card.Body className="card-body">
+                                            <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                                                {course.name} </Card.Title>
+                                            <Card.Text className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                                                {course.description} </Card.Text>
+                                            <Button variant="primary"> Go </Button>
+
+                                            {/* Delete Button */}
+                                            {currentUser && currentUser.role === "FACULTY" && (
+                                                <button onClick={(event) => {
+                                                    event.preventDefault();
+                                                    deleteCourse(course._id);
+                                                }} className="btn btn-danger float-end"
+                                                    id="wd-delete-course-click">
+                                                    Delete
+                                                </button>
+                                            )}
+
+
+                                            <button id="wd-edit-course-click"
+                                                onClick={(event) => {
+                                                    event.preventDefault();
+                                                    setCourse(course);
+                                                }}
+                                                className="btn btn-warning me-2 float-end" >
+                                                Edit
+                                            </button>
+
+                                        </Card.Body>
+                                    </Link>
+                                </Card>
+                            </Col>
+                        ))}
                 </Row>
             </div>
-        </div>);
+
+
+
+
+        </div>
+    );
 }
+
+
+// import React, { useState } from "react";
+// import { Link } from "react-router-dom";
+// import * as db from "./Database";
+// import { Button, Card, Col, FormControl, Row } from "react-bootstrap";
+// import { v4 as uuidv4 } from "uuid";
+// import { useSelector } from "react-redux";
+
+
+// // 为 props 添加类型
+// interface DashboardProps {
+//     courses: any[];
+//     course: any;
+//     setCourse: (course: any) => void;
+//     addNewCourse: () => void;
+//     deleteCourse: (courseId: string) => void;
+//     updateCourse: () => void;
+// }
+
+// export default function Dashboard({
+//     courses,
+//     course,
+//     setCourse,
+//     addNewCourse,
+//     deleteCourse,
+//     updateCourse
+// }: DashboardProps) {
+//     const courseImages: { [key: string]: string } = {
+//         "RS101": "/images/reactjs.jpg",
+//         "RS102": "/images/terraform.jpg",
+//         "RS103": "/images/nodejs.jpg",
+//         "RS104": "/images/python.jpg",
+//         "RS105": "/images/docker.jpg",
+//         "RS106": "/images/kubernetes.jpg",
+//         "RS107": "/images/git.jpg",
+//     };
+
+//     const { currentUser } = useSelector((state: any) => state.accountReducer);
+//     const { enrollments } = db;
+
+
+
+//     return (
+//         <div id="wd-dashboard">
+//             <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
+//             <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
+
+//             {currentUser && currentUser.role === "FACULTY" && (
+//                 <h5>New Course
+//                     <button className="btn btn-primary float-end"
+//                         id="wd-add-new-course-click"
+//                         onClick={addNewCourse} > Add
+//                     </button>
+
+//                     <button className="btn btn-warning float-end me-2"
+//                         onClick={updateCourse} id="wd-update-course-click">
+//                         Update
+//                     </button>
+
+//                 </h5>
+//             )}
+
+
+//             <br />
+//             <FormControl value={course.name} className="mb-2"
+//                 onChange={(e) => setCourse({ ...course, name: e.target.value })} />
+//             <FormControl as="textarea" value={course.description} rows={3}
+//                 onChange={(e) => setCourse({ ...course, description: e.target.value })} />
+
+//             <hr />
+
+
+//             <div id="wd-dashboard-courses">
+//                 <Row xs={1} md={5} className="g-4">
+//                     {courses.filter((course) =>
+//                         enrollments.some(
+//                             (enrollment) =>
+//                                 enrollment.user === currentUser._id &&
+//                                 enrollment.course === course._id
+//                         ))
+//                         .map((course) => (
+//                             <Col className="wd-dashboard-course col" style={{ width: "300px" }}>
+//                                 <Card>
+//                                     <Link to={`/Kambaz/Courses/${course._id}/Home`}
+//                                         className="wd-dashboard-course-link text-decoration-none text-dark" >
+//                                         {/* <Card.Img src="/images/reactjs.jpg" variant="top" width="100%" height={160} /> */}
+//                                         <Card.Img
+//                                             src={courseImages[course._id] || "public/images/teslabot.jpg"}
+//                                             variant="top"
+//                                             width="100%"
+//                                             height={160}
+//                                         />
+//                                         <Card.Body className="card-body">
+//                                             <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden">
+//                                                 {course.name} </Card.Title>
+//                                             <Card.Text className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+//                                                 {course.description} </Card.Text>
+//                                             <Button variant="primary"> Go </Button>
+
+//                                             {/* Delete Button */}
+//                                             {currentUser && currentUser.role === "FACULTY" && (
+//                                                 <button onClick={(event) => {
+//                                                     event.preventDefault();
+//                                                     deleteCourse(course._id);
+//                                                 }} className="btn btn-danger float-end"
+//                                                     id="wd-delete-course-click">
+//                                                     Delete
+//                                                 </button>
+//                                             )}
+
+//                                         </Card.Body>
+//                                     </Link>
+//                                 </Card>
+//                             </Col>
+//                         ))}
+//                 </Row>
+//             </div>
+//         </div>);
+// }
 
 // HW2
 // import { Link } from "react-router-dom";

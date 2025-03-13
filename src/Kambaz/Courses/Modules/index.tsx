@@ -4,28 +4,70 @@ import LessonControlButtons from "./LessonControlButtons";
 import ModuleControlButtons from "./ModuleControlButtons";
 import { useParams } from "react-router";
 import * as db from "../../Database";
+import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { FormControl, ListGroup } from "react-bootstrap";
+
+// add delete update modules
+import { addModule, editModule, updateModule, deleteModule } from "./reducer";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function Modules() {
     const { cid } = useParams(); // 获取当前课程 ID
-    const modules = db.modules; // 获取所有模块
+    // const modules = db.modules; // 获取所有模块
+    // const [modules, setModules] = useState<any[]>(db.modules);
+    const [moduleName, setModuleName] = useState("");
+
+    const { modules } = useSelector((state: any) => state.modulesReducer);
+    const dispatch = useDispatch();
+
+    const { currentUser } = useSelector((state: any) => state.accountReducer); // 获取当前用户
 
     return (
         <div className="container">
-            <ModulesControls />
+            {currentUser && currentUser.role === "FACULTY" && (
+            <ModulesControls
+                setModuleName={setModuleName}  // 将 setModuleName 传递给 ModulesControls
+                moduleName={moduleName}  // 将 moduleName 传递给 ModulesControls
+                addModule={() => {
+                    dispatch(addModule({ name: moduleName, course: cid }));
+                    setModuleName("");
+                }} // 将 addModule 传递给 ModulesControls
+            />)
+            }
             <br />
             <br />
             <br />
             <br />
-            <ul id="wd-modules" className="list-group rounded-0">
+            <ListGroup id="wd-modules" className="rounded-0">
                 {modules
                     .filter((module: any) => module.course === cid) // 过滤出当前课程的模块
                     .map((module: any) => (
                         <li key={module._id} className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
                             {/* 模块标题 */}
                             <div className="wd-title p-3 ps-2 bg-secondary">
+
+                                {/* 新加 */}
                                 <BsGripVertical className="me-2 fs-3" />
-                                {module.name}
-                                <ModuleControlButtons />
+                                {!module.editing && module.name}
+                                {module.editing && (
+                                    <FormControl className="w-50 d-inline-block"
+                                        onChange={(e) => dispatch(updateModule({ ...module, name: e.target.value }))}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                dispatch(updateModule({ ...module, editing: false }));
+                                            }
+                                        }}
+                                        defaultValue={module.name} />
+                                )}
+
+                                {currentUser && currentUser.role === "FACULTY" && (
+                                    <ModuleControlButtons
+                                        moduleId={module._id}
+                                        deleteModule={(moduleId) => {
+                                            dispatch(deleteModule(moduleId));
+                                        }}
+                                        editModule={(moduleId) => dispatch(editModule(moduleId))} />)}
                             </div>
 
                             {/* 模块描述（如果存在） */}
@@ -49,10 +91,32 @@ export default function Modules() {
                             )}
                         </li>
                     ))}
-            </ul>
+            </ListGroup>
         </div>
     );
 }
+
+// // addModule 函数用于添加新模块
+// const addModule = () => {
+//     setModules([...modules, { _id: uuidv4(), name: moduleName, course: cid, lessons: [] }]);
+//     setModuleName("");
+// };
+
+// // deleteModule 函数用于删除模块
+// const deleteModule = (moduleId: string) => {
+//     setModules(modules.filter((m) => m._id !== moduleId));
+// };
+
+// // editModule 函数用于编辑模块
+// const editModule = (moduleId: string) => {
+//     setModules(modules.map((m) => (m._id === moduleId ? { ...m, editing: true } : m)));
+// };
+
+// // updateModule 函数用于更新模块
+// const updateModule = (module: any) => {
+//     setModules(modules.map((m) => (m._id === module._id ? module : m)));
+// };
+
 
 // HW2
 // import { ListGroup } from "react-bootstrap";

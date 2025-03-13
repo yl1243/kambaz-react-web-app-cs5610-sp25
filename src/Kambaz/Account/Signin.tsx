@@ -1,19 +1,97 @@
-import { Link } from "react-router-dom";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, FormControl } from "react-bootstrap";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { setCurrentUser } from "./reducer";
+import { useDispatch } from "react-redux";
+import * as db from "../Database";
 
 export default function Signin() {
+    const [credentials, setCredentials] = useState<any>({});
+    const [error, setError] = useState<string>('');
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const signin = () => {
+        const user = db.users.find(
+            (u: any) => u.username === credentials.username && u.password === credentials.password
+        );
+
+        if (!user) {
+            setError("Invalid username or password.");
+            return; // Return early if no match found
+        }
+
+        console.log("User found:", user); // Debugging
+
+        // 添加 role 字段
+        const userWithRole = { ...user, role: "FACULTY" }; // 或者根据实际情况设置 role
+        dispatch(setCurrentUser(user));
+        navigate("Kambaz/Dashboard");
+    };
+
     return (
-        <div className="p-4">
-            <h1>Signin</h1>
-            <Form>
-                <Form.Control placeholder="username" className="mb-2" />
-                <Form.Control type="password" placeholder="password" className="mb-2" />
-                <Button variant="primary" className="w-100 mb-2">Signin</Button>
-            </Form>
-            <Link to="/Kambaz/Account/Signup">Signup</Link>
+        <div id="wd-signin-screen">
+            <h1>Sign in</h1>
+            <FormControl
+                defaultValue={credentials.username}
+                onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+                className="mb-2"
+                placeholder="username"
+                id="wd-username"
+            />
+            <FormControl
+                defaultValue={credentials.password}
+                onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                className="mb-2"
+                placeholder="password"
+                type="password"
+                id="wd-password"
+            />
+            <Button onClick={signin} id="wd-signin-btn" className="w-100">
+                Sign in
+            </Button>
+            {error && <p style={{ color: "red" }}>{error}</p>}
+            <Link id="wd-signup-link" to="/Kambaz/Account/Signup"> Sign up </Link>
         </div>
     );
 }
+
+
+
+// import { Form, Button, FormControl } from "react-bootstrap";
+// import { useState } from "react";
+// import { Link, useNavigate } from "react-router-dom";
+// import { setCurrentUser } from "./reducer";
+// import { useDispatch } from "react-redux";
+// import * as db from "../Database";
+
+// export default function Signin() {
+
+//     const [credentials, setCredentials] = useState<any>({});
+//     const dispatch = useDispatch();
+//     const navigate = useNavigate();
+//     const signin = () => {
+//         const user = db.users.find(
+//             (u: any) => u.username === credentials.username && u.password === credentials.password);
+//         if (!user) return;
+//         dispatch(setCurrentUser(user));
+//         navigate("/Kambaz/Dashboard")
+//     };
+
+//     return (
+//         <div id="wd-signin-screen">
+//             <h1>Sign in</h1>
+//             <FormControl defaultValue={credentials.username}
+//                 onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+//                 className="mb-2" placeholder="username" id="wd-username" />
+//             <FormControl defaultValue={credentials.password}
+//                 onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+//                 className="mb-2" placeholder="password" type="password" id="wd-password" />
+//             <Button onClick={signin} id="wd-signin-btn" className="w-100" > Sign in </Button>
+//             <Link id="wd-signup-link" to="/Kambaz/Account/Signup"> Sign up </Link>
+//         </div>
+//     );
+// }
 
 // import { Link } from "react-router-dom";
 // export default function Signin() {
