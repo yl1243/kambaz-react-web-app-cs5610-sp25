@@ -18,7 +18,14 @@ export default function TOC() {
                 active={pathname.includes("Lab5")}> Lab 5 </Nav.Link> </Nav.Item>
 
             <Nav.Item> <Nav.Link as={Link} to="/Kambaz" id="wd-a3"> Kambaz </Nav.Link> </Nav.Item>
-            <Nav.Item> <Nav.Link href="https://github.com/yl1243" target="_blank"> My GitHub </Nav.Link> </Nav.Item>
+
+            <Nav.Item> <Nav.Link href="https://github.com/yl1243" target="_blank"> My GitHub Profile </Nav.Link> </Nav.Item>
+
+            <Nav.Item> <Nav.Link href="https://github.com/yl1243/kambaz-react-web-app-cs5610-sp25" target="_blank"> React code overview </Nav.Link> </Nav.Item>
+
+            <Nav.Item> <Nav.Link href="https://kambaz-node-server-app-cs5610-sp25-cd92.onrender.com/" target="_blank"> Run on Render  </Nav.Link> </Nav.Item>
+
+            <Nav.Item> <Nav.Link href="https://github.com/yl1243/kambaz-node-server-app-cs5610-sp25/tree/a5" target="_blank"> Node Code only posted on branch a5 </Nav.Link> </Nav.Item>
         </Nav>
     );
 }
