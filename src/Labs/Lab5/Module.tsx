@@ -1,4 +1,4 @@
-// hh的
+// hh的 attempt
 import { useState } from "react";
 
 const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
