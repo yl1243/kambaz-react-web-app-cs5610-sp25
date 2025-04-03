@@ -2,82 +2,91 @@
     {
         "_id": "A101",
         "title": "Propulsion Assignment",
+        "description": "The assignment is available online. Submit a link to the landing page of your Web application running on Netlify. The landing page should include: \n- Your full name and section\n- Links to each of the lab assignments\n- Link to the Kanbas application\n- Links to all relevant source code repositories.\n\nThe Kanbas application should include a link to navigate back to the landing page.",
         "course": "RS101",
-        "description": "Analyze the principles of rocket propulsion and provide a brief report.",
-        "availableDate": "2024-05-06T00:00",
-        "dueDate": "2024-05-13T23:59",
-        "point": "100"
+        "points": 100,
+        "dueDate": "2024-05-12T12:00:00",
+        "availableDate": "2024-05-01T00:00:00",
+        "type": "Multiple Modules"
     },
     {
         "_id": "A102",
-        "title": "Combustion Analysis",
+        "title": "Propulsion Assignment",
+        "description": "Propulsion Assignment",
         "course": "RS101",
-        "description": "Conduct a detailed combustion analysis and write a report.",
-        "availableDate": "2024-05-13T00:00",
-        "dueDate": "2024-05-20T23:59",
-        "point": "100"
+        "points": 100,
+        "dueDate": "2024-05-12T12:00:00",
+        "availableDate": "2024-05-01T00:00:00",
+        "type": "Multiple Modules"
     },
     {
         "_id": "A103",
         "title": "Nozzle Design Project",
+        "description": "Nozzle Design Project",
         "course": "RS101",
-        "description": "Design an optimized rocket nozzle and evaluate its efficiency.",
-        "availableDate": "2024-05-20T00:00",
-        "dueDate": "2024-05-27T23:59",
-        "point": "100"
+        "points": 100,
+        "dueDate": "2024-05-12T12:00:00",
+        "availableDate": "2024-05-01T00:00:00",
+        "type": "Multiple Modules"
     },
     {
         "_id": "A201",
         "title": "Aerodynamics Quiz",
+        "description": "Aerodynamics Quiz",
         "course": "RS102",
-        "description": "Test your knowledge on fundamental aerodynamics concepts.",
-        "availableDate": "2024-05-06T00:00",
-        "dueDate": "2024-05-13T23:59",
-        "point": "100"
+        "points": 100,
+        "dueDate": "2024-05-12T12:00:00",
+        "availableDate": "2024-05-01T00:00:00",
+        "type": "Multiple Modules"
     },
     {
         "_id": "A202",
         "title": "Flow Analysis",
+        "description": "Flow Analysis",
         "course": "RS102",
-        "description": "Analyze subsonic and supersonic flows in various conditions.",
-        "availableDate": "2024-05-13T00:00",
-        "dueDate": "2024-05-20T23:59",
-        "point": "100"
+        "points": 100,
+        "dueDate": "2024-05-12T12:00:00",
+        "availableDate": "2024-05-01T00:00:00",
+        "type": "Multiple Modules"
     },
     {
         "_id": "A203",
         "title": "Heating Analysis",
+        "description": "Heating Analysis",
         "course": "RS102",
-        "description": "Examine aerodynamic heating effects on spacecraft surfaces.",
-        "availableDate": "2024-05-20T00:00",
-        "dueDate": "2024-05-27T23:59",
-        "point": "100"
+        "points": 100,
+        "dueDate": "2024-05-12T12:00:00",
+        "availableDate": "2024-05-01T00:00:00",
+        "type": "Multiple Modules"
     },
     {
         "_id": "A301",
         "title": "Structural Design Task",
+        "description": "Structural Design Task",
         "course": "RS103",
-        "description": "Design a spacecraft structural component with weight and durability optimization.",
-        "availableDate": "2024-05-06T00:00",
-        "dueDate": "2024-05-13T23:59",
-        "point": "100"
+        "points": 100,
+        "dueDate": "2024-05-12T12:00:00",
+        "availableDate": "2024-05-01T00:00:00",
+        "type": "Multiple Modules"
     },
     {
         "_id": "A302",
         "title": "Orbital Calculations",
+        "description": "Orbital Calculations",
         "course": "RS103",
-        "description": "Compute the orbital trajectory for a satellite mission.",
-        "availableDate": "2024-05-13T00:00",
-        "dueDate": "2024-05-20T23:59",
-        "point": "100"
+        "points": 100,
+        "dueDate": "2024-05-12T12:00:00",
+        "availableDate": "2024-05-01T00:00:00",
+        "type": "Multiple Modules"
     },
     {
         "_id": "A303",
         "title": "Systems Engineering Exam",
+        "description": "Systems Engineering Exam",
         "course": "RS103",
-        "description": "Assess knowledge on spacecraft systems and subsystems engineering.",
-        "availableDate": "2024-05-20T00:00",
-        "dueDate": "2024-05-27T23:59",
-        "point": "100"
+        "points": 100,
+        "dueDate": "2024-05-12T12:00:00",
+        "availableDate": "2024-05-01T00:00:00",
+        "type": "Multiple Modules"
     }
 ]
