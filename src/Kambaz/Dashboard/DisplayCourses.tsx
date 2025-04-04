@@ -49,9 +49,11 @@ export default function EnrolledCourses({
             <div id="wd-dashboard-courses" className="row">
                 <div className="row row-cols-1 row-cols-md-5 g-4">
                     {displayedCourses.map((course) => {
-                        const enrolledCourse = enrolledCourses.find(
-                            (enrolledCourse) => enrolledCourse._id === course._id
-                        );
+                        // 解决不显示问题，但好像没用上
+                        // const enrolledCourse = enrolledCourses.find(
+                        //     (enrolledCourse) => enrolledCourse._id === course._id
+                        // );
+
                         // 修改enroll button 不显示的问题
                         // const enrollmentObj = enrolledCourse
                         //     ? enrollments.find(
