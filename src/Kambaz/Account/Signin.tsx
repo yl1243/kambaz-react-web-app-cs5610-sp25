@@ -1,7 +1,7 @@
 // py的
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUser } from "./reducer";
 // import * as db from "../Database";
 
@@ -23,11 +23,11 @@ export default function Signin() {
         navigate("/Kambaz/Dashboard");
     };
 
-    // const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
 
-    // if (currentUser) {
-    //     return null;
-    // }
+    if (currentUser) {
+        return null;
+    }
 
     // 旧的
     // const signin = () => {
@@ -45,34 +45,55 @@ export default function Signin() {
     //     }
     // };
 
+
     return (
         <div id="wd-signin-screen">
-            <h1>Sign in</h1>
+            <h3>Sign in</h3>
             <input
-                id="wd-username"
-                placeholder="username"
-                className="form-control mb-2"
-                value={credentials.username}
+                defaultValue={credentials.username}
                 onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+                className="form-control mb-2"
             />
             <input
-                id="wd-password"
-                placeholder="password"
-                type="password"
-                className="form-control mb-2"
-                value={credentials.password}
+                defaultValue={credentials.password}
                 onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                className="form-control mb-2"
+                type="password"
             />
-            <button
-                id="wd-signin-btn"
-                className="btn btn-primary w-100 mb-2"
-                onClick={signin}
-            >
-                Sign in
-            </button>
-            <Link id="wd-signup-link" to="/Kambaz/Account/Signup">Sign up</Link>
+
+            <button onClick={signin} id="wd-signin-btn" className="btn btn-primary w-100" > Sign in </button>
+            <Link id="wd-signup-link" to="/Kanbas/Account/Signup"> Sign up </Link>
         </div>
     );
+    // hw5旧的
+    // return (
+    //     <div id="wd-signin-screen">
+    //         <h1>Sign in</h1>
+    //         <input
+    //             id="wd-username"
+    //             placeholder="username"
+    //             className="form-control mb-2"
+    //             value={credentials.username}
+    //             onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+    //         />
+    //         <input
+    //             id="wd-password"
+    //             placeholder="password"
+    //             type="password"
+    //             className="form-control mb-2"
+    //             value={credentials.password}
+    //             onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+    //         />
+    //         <button
+    //             id="wd-signin-btn"
+    //             className="btn btn-primary w-100 mb-2"
+    //             onClick={signin}
+    //         >
+    //             Sign in
+    //         </button>
+    //         <Link id="wd-signup-link" to="/Kambaz/Account/Signup">Sign up</Link>
+    //     </div>
+    // );
 }
 
 // // hw4旧的

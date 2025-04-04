@@ -52,13 +52,19 @@ export default function EnrolledCourses({
                         const enrolledCourse = enrolledCourses.find(
                             (enrolledCourse) => enrolledCourse._id === course._id
                         );
-                        const enrollmentObj = enrolledCourse
-                            ? enrollments.find(
-                                (enrollment) =>
-                                    enrollment.user === currentUser._id &&
-                                    enrollment.course === enrolledCourse._id
-                            )
-                            : null;
+                        // 修改enroll button 不显示的问题
+                        // const enrollmentObj = enrolledCourse
+                        //     ? enrollments.find(
+                        //         (enrollment) =>
+                        //             enrollment.user === currentUser._id &&
+                        //             enrollment.course === enrolledCourse._id
+                        //     )
+                        //     : null;
+                        const enrollmentObj = enrollments.find(
+                            (enrollment) =>
+                                enrollment.user === currentUser._id &&
+                                enrollment.course === course._id
+                        );
 
                         return (
                             <div

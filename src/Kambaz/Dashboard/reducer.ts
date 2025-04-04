@@ -1,4 +1,6 @@
+// hh 旧的 dashboard 中的reducer 是用来处理 enrollments 的
 import { createSlice } from "@reduxjs/toolkit";
+import { v4 as uuidv4 } from "uuid";
 
 const initialState = {
     // enrollments: enrollments,
@@ -14,8 +16,9 @@ const enrollmentsSlice = createSlice({
         },
 
         addEnrollment: (state, { payload: enrollment }) => {
+            const newId = `A${uuidv4().substring(0, 6)}`;
             const newEnrollment: any = {
-                _id: enrollment._id,
+                _id: newId,
                 user: enrollment.user,
                 course: enrollment.course
             }
