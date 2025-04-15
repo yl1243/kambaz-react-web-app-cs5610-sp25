@@ -26,6 +26,7 @@ export default function Kambaz() {
 
     // a different user logs in, the courses will be reloaded from the serve
     const [courses, setCourses] = useState<any[]>([]);
+    const [enrolling, setEnrolling] = useState<boolean>(false);
 
     const [course, setCourse] = useState<any>({
         _id: "0",
@@ -37,23 +38,65 @@ export default function Kambaz() {
     });
 
     const { currentUser } = useSelector((state: any) => state.accountReducer);
-    const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
+    // const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
 
 
-    const fetchCourses = async () => {
+    const findCoursesForUser = async () => {
         try {
-            const courses = await userClient.findMyCourses();
+            const courses = await userClient.findCoursesForUser(currentUser._id);
             setCourses(courses);
         } catch (error) {
             console.error(error);
         }
     };
 
+    const updateEnrollment = async (courseId: string, enrolled: boolean) => {
+        if (enrolled) {
+            await userClient.enrollIntoCourse(currentUser._id, courseId);
+        } else {
+            await userClient.unenrollFromCourse(currentUser._id, courseId);
+        }
+        setCourses(
+            courses.map((course) => {
+                if (course._id === courseId) {
+                    return { ...course, enrolled: enrolled };
+                } else {
+                    return course;
+                }
+            })
+        );
+    };
+
+
+    const fetchCourses = async () => {
+        try {
+            const allCourses = await courseClient.fetchAllCourses();
+            const enrolledCourses = await userClient.findCoursesForUser(
+                currentUser._id
+            );
+            const courses = allCourses.map((course: any) => {
+                if (enrolledCourses.find((c: any) => c._id === course._id)) {
+                    return { ...course, enrolled: true };
+                } else {
+                    return course;
+                }
+            });
+            setCourses(courses);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
     useEffect(() => {
-        fetchCourses();
-    }, [currentUser, enrollments]);
+        if (enrolling) {
+            fetchCourses();
+        } else {
+            findCoursesForUser();
+        }
+    }, [currentUser, enrolling]);
 
-
+    // fetch all enrollments
     const fetchAllEnrollments = async () => {
         const enrollments = await dashboardClient.fetchAllEnrollments();
         dispatch(setEnrollments(enrollments));
@@ -61,7 +104,7 @@ export default function Kambaz() {
 
     // add course
     const addNewCourse = async () => {
-        const newCourse = await userClient.createCourse(course);
+        const newCourse = await courseClient.createCourse(course);
         setCourses([...courses, newCourse]);
     };
 
@@ -112,6 +155,9 @@ export default function Kambaz() {
                                         addNewCourse={addNewCourse}
                                         deleteCourse={deleteCourse}
                                         updateCourse={updateCourse}
+                                        enrolling={enrolling}
+                                        setEnrolling={setEnrolling}
+                                        updateEnrollment={updateEnrollment}
                                     />
                                 </ProtectedRoute>
                             }

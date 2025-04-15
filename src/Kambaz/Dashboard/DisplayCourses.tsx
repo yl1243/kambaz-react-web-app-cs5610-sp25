@@ -13,6 +13,10 @@ export default function EnrolledCourses({
     isFaculty,
     deleteCourse,
     setCourse,
+    enrolling,
+    setEnrolling,
+    updateEnrollment
+
 }: {
     enrolledCourses: any[];
     allCourses: any[];
@@ -21,6 +25,9 @@ export default function EnrolledCourses({
     isFaculty: boolean;
     deleteCourse: (courseId: string) => void;
     setCourse: (courseId: string) => void;
+    enrolling: boolean;
+    setEnrolling: (enrolling: boolean) => void;
+    updateEnrollment: (courseId: string, enrolled: boolean) => void
 }) {
     const navigate = useNavigate();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -37,7 +44,7 @@ export default function EnrolledCourses({
     return (
         <div>
             <h2 id="wd-dashboard-published" className="mt-3">
-                {isFaculty
+                {isFaculty || isAdmin
                     ? "All Published Courses"
                     : showAllCourses
                         ? "All Published Courses"
@@ -104,7 +111,33 @@ export default function EnrolledCourses({
                                             Go{" "}
                                         </button>
 
-                                        {!isFaculty && enrollmentObj && (
+                                        {/* student另update enroll, 和老师的不一样*/}
+                                        {!(isFaculty || isAdmin) && enrolling && (
+                                            <button
+                                                onClick={async (event) => {
+                                                    event.preventDefault();
+                                                    if (enrollmentObj) {
+                                                        await enrollmentsClient.unenrollCourse(enrollmentObj._id);
+                                                        dispatch(deleteEnrollment(enrollmentObj._id));
+                                                    } else {
+                                                        const enrollment = await courseClient.enrollCourse(currentUser._id, course._id);
+                                                        dispatch(
+                                                            addEnrollment({
+                                                                _id: enrollment._id,
+                                                                user: currentUser._id,
+                                                                course: course._id,
+                                                            })
+                                                        );
+                                                    }
+                                                    updateEnrollment(course._id, !course.enrolled);
+                                                }}
+                                                className={`btn ${enrollmentObj ? "btn-danger" : "btn-success"} float-end`}
+                                            >
+                                                {enrollmentObj ? "Unenroll" : "Enroll"}
+                                            </button>
+                                        )}
+                                        {/* 在老师的HW6中变了 */}
+                                        {/* {!(isFaculty || isAdmin) && enrollmentObj && (
                                             <button
                                                 className="btn btn-danger float-end"
                                                 onClick={async () => {
@@ -119,7 +152,7 @@ export default function EnrolledCourses({
                                             </button>
                                         )}
 
-                                        {!isFaculty && !enrollmentObj && (
+                                        {!(isFaculty || isAdmin) && !enrollmentObj && (
                                             <button
                                                 className="btn btn-success float-end"
                                                 onClick={async () => {
@@ -137,7 +170,7 @@ export default function EnrolledCourses({
                                             >
                                                 Enroll
                                             </button>
-                                        )}
+                                        )} */}
 
                                         {(isFaculty || isAdmin) && (
                                             <>

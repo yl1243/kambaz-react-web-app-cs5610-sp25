@@ -11,6 +11,10 @@ export default function Dashboard({
     addNewCourse,
     deleteCourse,
     updateCourse,
+    enrolling,
+    setEnrolling,
+    updateEnrollment
+
 }: {
     courses: any[];
     course: any;
@@ -18,6 +22,10 @@ export default function Dashboard({
     addNewCourse: () => void;
     deleteCourse: (course: any) => void;
     updateCourse: () => void;
+    enrolling: boolean;
+    setEnrolling: (enrolling: boolean) => void;
+    updateEnrollment: (courseId: string, enrolled: boolean) => void
+
 }) {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
 
@@ -32,6 +40,9 @@ export default function Dashboard({
         fetchAllCourses();
     }, []); //只运行一次
 
+    // Removed duplicate state declaration for enrolling and setEnrolling
+
+
     const isFaculty = currentUser.role == "FACULTY";
     const isAdmin = currentUser.role == "ADMIN";
     const isStudent = currentUser.role == "STUDENT";
@@ -41,6 +52,13 @@ export default function Dashboard({
     return (
         <div id="wd-dashboard" style={{ paddingLeft: "120px" }}>
             <h1 id="wd-dashboard-title">Dashboard
+                <button
+                    onClick={() => setEnrolling(!enrolling)}
+                    className="float-end btn btn-primary"
+                >
+                    {enrolling ? "My Courses" : "All Courses"}
+                </button>
+
                 {currentUser?.role && (
                     <span className="fs-5 ms-3 text-muted">({currentUser.role})</span>
                 )}
@@ -147,6 +165,9 @@ export default function Dashboard({
                 isFaculty={isFaculty}
                 deleteCourse={deleteCourse}
                 setCourse={setCourse}
+                enrolling={enrolling}
+                setEnrolling={setEnrolling}
+                updateEnrollment={updateEnrollment}
             />
         </div>
     );

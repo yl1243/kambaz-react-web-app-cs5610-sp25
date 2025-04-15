@@ -5,7 +5,7 @@ import ModuleControlButtons from "./ModuleControlButtons";
 import { useParams } from "react-router";
 // import * as db from "../../Database";
 
-import * as coursesClient from "../client";
+import * as courseClient from "../client";
 import * as modulesClient from "./client";
 
 
@@ -38,43 +38,75 @@ export default function Modules() {
     const createModuleForCourse = async () => {
         if (!cid) return;
         const newModule = { name: moduleName, course: cid };
-        const module = await coursesClient.createModuleForCourse(cid, newModule);
+        const module = await courseClient.createModuleForCourse(cid, newModule);
         dispatch(addModule(module));
     };
 
 
-    // fetchModules 函数用于从服务器获取模块数据
-    const fetchModules = async () => {
-        const modules = await coursesClient.findModulesForCourse(cid as string);
-        dispatch(setModules(modules));
+    // fetchModules 
+    const fetchModulesForCourse = async () => {
+        try {
+            const modules = await courseClient.findModulesForCourse(cid!);
+            dispatch(setModules(modules));
+        } catch (error) {
+            console.error("Error fetching modules:", error);
+        }
+        
+        
     };
-
-    // removeModule 函数用于删除模块
-    const removeModule = async (moduleId: string) => {
-        await modulesClient.deleteModule(moduleId);
-        dispatch(deleteModule(moduleId));
-    };
-
-
 
     useEffect(() => {
-        fetchModules();
-    }, []);
+        fetchModulesForCourse();
+    }, [cid]);
+
+    // const fetchModules = async () => {
+    //     const modules = await courseClient.findModulesForCourse(cid as string);
+    //     dispatch(setModules(modules));
+    // };
+
+
+
 
 
     const { currentUser } = useSelector((state: any) => state.accountReducer); // 获取当前用户
 
+    // add Module Handler
+    const addModuleHandler = async () => {
+        const newModule = await courseClient.createModuleForCourse(cid!, {
+            name: moduleName,
+            course: cid,
+        });
+        dispatch(addModule(newModule));
+        setModuleName("");
+    };
+
+    // remove Module Handler 
+    const deleteModuleHandler = async (moduleId: any) => {
+        await modulesClient.deleteModule(moduleId);
+        dispatch(deleteModule(moduleId));
+    };
+
+    // update Module Handler
+    const updateModuleHandler = async (module: any) => {
+        await modulesClient.updateModule(module);
+        dispatch(updateModule(module));
+    };
+
+
+
     return (
         <div className="container">
-            {currentUser && currentUser.role === "FACULTY" && (
-            <ModulesControls
+            {currentUser && (currentUser.role === "FACULTY" || currentUser.role === "ADMIN") && (
+                <ModulesControls
+                    // addModule={createModuleForCourse}
+                    addModule={addModuleHandler}
                     setModuleName={setModuleName}  // 将 setModuleName 传递给 ModulesControls
                     moduleName={moduleName}  // 将 moduleName 传递给 ModulesControls
                     // addModule={() => {
                     //     dispatch(addModule({ name: moduleName, course: cid }));
                     //     setModuleName("");
                     // }} // 将 addModule 传递给 ModulesControls
-                    addModule={createModuleForCourse}
+                    
             />)
             }
             <br />
@@ -94,23 +126,22 @@ export default function Modules() {
                                 {!module.editing && module.name}
                                 {module.editing && (
                                     <FormControl className="w-50 d-inline-block"
-                                        onChange={(e) => dispatch(updateModule({ ...module, name: e.target.value }))}
+                                        onChange={(e) => updateModuleHandler({ ...module, name: e.target.value })}
                                         onKeyDown={(e) => {
                                             if (e.key === "Enter") {
-                                                // dispatch(updateModule({ ...module, editing: false }));
-                                                saveModule({ ...module, editing: false });
+                                                updateModuleHandler({ ...module, editing: false });
                                             }
                                         }}
                                         defaultValue={module.name} />
                                 )}
 
-                                {currentUser && currentUser.role === "FACULTY" && (
+                                {currentUser && (currentUser.role === "FACULTY" || currentUser.role === "ADMIN") && (
                                     <ModuleControlButtons
                                         moduleId={module._id}
                                         // deleteModule={(moduleId) => {
                                         //     dispatch(deleteModule(moduleId));
                                         // }}
-                                        deleteModule={(moduleId) => removeModule(moduleId)} // HW5删除模块
+                                        deleteModule={(moduleId) => deleteModuleHandler(moduleId)} // HW5删除模块
                                         editModule={(moduleId) => dispatch(editModule(moduleId))} />)}
                             </div>
 
