@@ -3,6 +3,7 @@ import Account from "./Account";
 import Dashboard from "./Dashboard";
 import Courses from "./Courses";
 import KambazNavigation from "./Navigation";
+import { addEnrollment, deleteEnrollment } from "./Dashboard/reducer";
 
 // import * as db from "./Database";
 import * as userClient from "./Account/client";
@@ -38,7 +39,7 @@ export default function Kambaz() {
     });
 
     const { currentUser } = useSelector((state: any) => state.accountReducer);
-    // const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
+    const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
 
 
     const findCoursesForUser = async () => {
@@ -50,24 +51,31 @@ export default function Kambaz() {
         }
     };
 
+    // update enrollment
+
     const updateEnrollment = async (courseId: string, enrolled: boolean) => {
         if (enrolled) {
             await userClient.enrollIntoCourse(currentUser._id, courseId);
         } else {
             await userClient.unenrollFromCourse(currentUser._id, courseId);
         }
-        setCourses(
-            courses.map((course) => {
-                if (course._id === courseId) {
-                    return { ...course, enrolled: enrolled };
-                } else {
-                    return course;
-                }
-            })
+
+        // ⚠️ 在这里更新 enrollments store 后再更新 course 状态
+        const updatedEnrollments = await dashboardClient.fetchAllEnrollments();
+        dispatch(setEnrollments(updatedEnrollments));
+
+        // ⚠️ 更新 enrolled 标记
+        setCourses((prevCourses) =>
+            prevCourses.map((course) =>
+                course._id === courseId
+                    ? { ...course, enrolled: enrolled }
+                    : course
+            )
         );
     };
 
 
+    // fetch courses
     const fetchCourses = async () => {
         try {
             const allCourses = await courseClient.fetchAllCourses();

@@ -47,7 +47,7 @@ export default function EnrolledCourses({
                 {isFaculty || isAdmin
                     ? "All Published Courses"
                     : showAllCourses
-                        ? "All Published Courses"
+                        ? "All Available Courses"
                         : "Enrolled Courses"}{" "}
                 ({displayedCourses.length})
             </h2>
@@ -111,13 +111,16 @@ export default function EnrolledCourses({
                                             Go{" "}
                                         </button>
 
+                                        {/* HW6: newly added enrollments */}
                                         {/* student另update enroll, 和老师的不一样*/}
+
+
                                         {!(isFaculty || isAdmin) && enrolling && (
                                             <button
                                                 onClick={async (event) => {
                                                     event.preventDefault();
                                                     if (enrollmentObj) {
-                                                        await enrollmentsClient.unenrollCourse(enrollmentObj._id);
+                                                        await enrollmentsClient.unenrollCourse(currentUser._id, course._id);
                                                         dispatch(deleteEnrollment(enrollmentObj._id));
                                                     } else {
                                                         const enrollment = await courseClient.enrollCourse(currentUser._id, course._id);
@@ -129,13 +132,31 @@ export default function EnrolledCourses({
                                                             })
                                                         );
                                                     }
-                                                    updateEnrollment(course._id, !course.enrolled);
+                                                    // if (enrollmentObj) {
+                                                    //     await enrollmentsClient.unenrollCourse(enrollmentObj._id);
+                                                    //     dispatch(deleteEnrollment(enrollmentObj._id));
+                                                    // } else {
+                                                    //     const enrollment = await courseClient.enrollCourse(currentUser._id, course._id);
+                                                    //     dispatch(
+                                                    //         addEnrollment({
+                                                    //             _id: enrollment._id,
+                                                    //             user: currentUser._id,
+                                                    //             course: course._id,
+                                                    //         })
+                                                    //     );
+                                                    // }
+                                                    updateEnrollment(course._id, !enrollmentObj);
                                                 }}
                                                 className={`btn ${enrollmentObj ? "btn-danger" : "btn-success"} float-end`}
                                             >
                                                 {enrollmentObj ? "Unenroll" : "Enroll"}
+
+                                                {/* g的 */}
+                                                {/* {course.enrolled ? "Unenroll" : "Enroll"} */}
                                             </button>
                                         )}
+
+
                                         {/* 在老师的HW6中变了 */}
                                         {/* {!(isFaculty || isAdmin) && enrollmentObj && (
                                             <button
