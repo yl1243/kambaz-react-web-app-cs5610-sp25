@@ -6,7 +6,12 @@ import { FaCheck, FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import * as client from "../../Account/client";
 import { FormControl } from "react-bootstrap";
+import PeopleTable from "./Table";
+
+
+
 export default function PeopleDetails() {
+    const { cid } = useParams(); // 获取当前课程 ID
     const { uid } = useParams();
     const [user, setUser] = useState<any>({});
 
@@ -65,15 +70,19 @@ export default function PeopleDetails() {
         setEmail(user.email || "");
         setRole(user.role || "");
     };
+
     useEffect(() => {
         if (uid) fetchUser();
     }, [uid]);
     if (!uid) return null;
 
 
-
     return (
+
         <div className="wd-people-details position-fixed top-0 end-0 bottom-0 bg-white p-4 shadow w-25">
+            <h3>People</h3>
+            <PeopleTable users={user} />
+
             <button onClick={() => navigate(-1)} className="btn position-fixed end-0 top-0 wd-close-details">
                 <IoCloseSharp className="fs-1" /> </button>
             <div className="text-center mt-2"> <FaUserCircle className="text-secondary me-2 fs-1" /> </div><hr />

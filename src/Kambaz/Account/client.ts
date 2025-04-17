@@ -4,6 +4,7 @@ const axiosWithCredentials = axios.create({ withCredentials: true });
 export const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 export const USERS_API = `${REMOTE_SERVER}/api/users`;
 
+
 // createUser
 export const createUser = async (user: any) => {
     const response = await axios.post(`${USERS_API}`, user);
@@ -113,3 +114,8 @@ export const unenrollFromCourse = async (userId: string, courseId: string) => {
     const response = await axiosWithCredentials.delete(`${USERS_API}/${userId}/courses/${courseId}`);
     return response.data;
 };
+
+export function findUsersForCourse(cid: string) {
+    throw new Error("Function not implemented.");
+}
+

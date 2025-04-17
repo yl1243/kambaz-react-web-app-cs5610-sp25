@@ -49,7 +49,9 @@ export default function Users() {
     };
 
 
+    // find all  users
     const { uid } = useParams();
+
     const fetchUsers = async () => {
         const users = await client.findAllUsers();
         setUsers(users);
