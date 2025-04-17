@@ -3,7 +3,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import { useParams, useNavigate } from "react-router";
 import { FaPencil } from "react-icons/fa6";
 import { FaCheck, FaUserCircle } from "react-icons/fa";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import * as client from "../../Account/client";
 import { FormControl } from "react-bootstrap";
 import PeopleTable from "./Table";
@@ -11,7 +11,7 @@ import PeopleTable from "./Table";
 
 
 export default function PeopleDetails() {
-    const { cid } = useParams(); // 获取当前课程 ID
+    // const { cid } = useParams(); // 获取当前课程 ID
     const { uid } = useParams();
     const [user, setUser] = useState<any>({});
 

@@ -3,7 +3,7 @@ import Account from "./Account";
 import Dashboard from "./Dashboard";
 import Courses from "./Courses";
 import KambazNavigation from "./Navigation";
-import { addEnrollment, deleteEnrollment } from "./Dashboard/reducer";
+// import { addEnrollment, deleteEnrollment } from "./Dashboard/reducer";
 
 // import * as db from "./Database";
 import * as userClient from "./Account/client";
@@ -39,7 +39,7 @@ export default function Kambaz() {
     });
 
     const { currentUser } = useSelector((state: any) => state.accountReducer);
-    const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
+    // const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
 
 
     const findCoursesForUser = async () => {

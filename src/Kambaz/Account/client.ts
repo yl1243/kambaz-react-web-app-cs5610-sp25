@@ -115,7 +115,7 @@ export const unenrollFromCourse = async (userId: string, courseId: string) => {
     return response.data;
 };
 
-export function findUsersForCourse(cid: string) {
-    throw new Error("Function not implemented.");
-}
+// export function findUsersForCourse(cid: string) {
+//     throw new Error("Function not implemented.");
+// }
 
