@@ -29,18 +29,21 @@ export default function Modules() {
     const dispatch = useDispatch();
 
     // saveModule 函数用于保存模块
-    const saveModule = async (module: any) => {
-        await modulesClient.updateModule(module);
-        dispatch(updateModule(module));
-    };
+    // 这里被comment掉， 因为说我用这个
+    // const saveModule = async (module: any) => {
+    //     await modulesClient.updateModule(module);
+    //     dispatch(updateModule(module));
+    // };
 
     // createModuleForCourse 函数用于创建新模块
-    const createModuleForCourse = async () => {
-        if (!cid) return;
-        const newModule = { name: moduleName, course: cid };
-        const module = await courseClient.createModuleForCourse(cid, newModule);
-        dispatch(addModule(module));
-    };
+
+    // 这里被comment掉， 因为说我用这个
+    // const createModuleForCourse = async () => {
+    //     if (!cid) return;
+    //     const newModule = { name: moduleName, course: cid };
+    //     const module = await courseClient.createModuleForCourse(cid, newModule);
+    //     dispatch(addModule(module));
+    // };
 
 
     // fetchModules 
