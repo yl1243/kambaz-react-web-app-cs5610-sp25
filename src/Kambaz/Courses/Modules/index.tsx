@@ -45,7 +45,6 @@ export default function Modules() {
     //     dispatch(addModule(module));
     // };
 
-
     // fetchModules 
     const fetchModulesForCourse = async () => {
         try {
